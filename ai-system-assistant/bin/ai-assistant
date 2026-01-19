@@ -1,5 +1,0 @@
-#!/bin/bash
-# Wrapper script for ai-assistant CLI
-
-cd /opt/ai-system-assistant
-exec /usr/bin/python3 -m src.cli "$@"
