@@ -1,0 +1,22 @@
+Package: ai-system-assistant
+Version: 1.0.0
+Section: admin
+Priority: optional
+Architecture: amd64
+Depends: python3 (>= 3.10), python3-pip, python3-pydantic
+Recommends: ollama
+Maintainer: AI System Assistant Team <contact@example.com>
+Description: Local AI assistant for Ubuntu system management
+ AI System Assistant is a local AI-powered tool for managing
+ Ubuntu system tasks through natural language commands.
+ .
+ Features:
+  - Start applications
+  - Kill processes
+  - List running processes
+  - Restart systemd services
+  - Execute safe shell queries
+ .
+ Uses Ollama with llama3 model for local AI processing.
+ No cloud APIs or internet connectivity required at runtime.
+Homepage: https://github.com/ai-system-assistant/ai-system-assistant
