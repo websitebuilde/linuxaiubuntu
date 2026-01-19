@@ -1,0 +1,55 @@
+#!/bin/bash
+# Post-installation script for AI System Assistant
+
+set -e
+
+# Create log file with appropriate permissions
+LOG_FILE="/var/log/ai-assistant.log"
+if [ ! -f "$LOG_FILE" ]; then
+    touch "$LOG_FILE"
+    chmod 640 "$LOG_FILE"
+fi
+
+# Install Python dependencies
+echo "Installing Python dependencies..."
+cd /opt/ai-system-assistant
+pip3 install --quiet -r requirements.txt
+
+# Create symlink for global command
+SYMLINK="/usr/local/bin/ai-assistant"
+if [ ! -L "$SYMLINK" ]; then
+    ln -sf /opt/ai-system-assistant/bin/ai-assistant "$SYMLINK"
+fi
+
+# Install and enable systemd service
+echo "Setting up systemd service..."
+cp /opt/ai-system-assistant/systemd/ai-assistant.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable ai-assistant.service
+
+# Check if Ollama is available
+if command -v ollama &> /dev/null; then
+    echo "Ollama found. Checking for llama3 model..."
+    if ! ollama list | grep -q "llama3"; then
+        echo "WARNING: llama3 model not found. Please run: ollama pull llama3"
+    else
+        echo "llama3 model found."
+    fi
+else
+    echo "WARNING: Ollama not found. Please install Ollama first:"
+    echo "  curl -fsSL https://ollama.com/install.sh | sh"
+    echo "  ollama pull llama3"
+fi
+
+echo ""
+echo "AI System Assistant installed successfully!"
+echo ""
+echo "Usage:"
+echo "  ai-assistant                  # Interactive mode"
+echo "  ai-assistant \"start firefox\"  # Single command"
+echo ""
+echo "To start the service:"
+echo "  sudo systemctl start ai-assistant"
+echo ""
+
+exit 0

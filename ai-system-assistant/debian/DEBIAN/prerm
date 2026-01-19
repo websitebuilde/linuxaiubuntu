@@ -1,0 +1,26 @@
+#!/bin/bash
+# Pre-removal script for AI System Assistant
+
+set -e
+
+echo "Stopping AI System Assistant..."
+
+# Stop and disable the service
+if systemctl is-active --quiet ai-assistant.service; then
+    systemctl stop ai-assistant.service
+fi
+
+if systemctl is-enabled --quiet ai-assistant.service 2>/dev/null; then
+    systemctl disable ai-assistant.service
+fi
+
+# Remove systemd service file
+rm -f /etc/systemd/system/ai-assistant.service
+systemctl daemon-reload
+
+# Remove symlink
+rm -f /usr/local/bin/ai-assistant
+
+echo "AI System Assistant removed."
+
+exit 0
